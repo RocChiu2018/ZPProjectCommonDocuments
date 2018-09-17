@@ -1,0 +1,40 @@
+//
+//  PrefixHeader.pch
+//  项目中的常见文件
+//
+//  Created by 赵鹏 on 2018/9/15.
+//  Copyright © 2018年 赵鹏. All rights reserved.
+//
+
+/**
+ 创建完.pch文件以后应该在TARGETS中的Build Settings中搜索"prefix"，然后在搜索结果中把"Precompile Prefix Header"由NO改为YES，并且把.pch文件的路径写在"Prefix Header"所对应的值中；
+ .pch文件在项目编译的时候会提前编译，所以也叫做预编译头文件；
+ .pch文件的作用：
+ 1、存放整个项目都要用到的宏。.pch文件编译一次就可以了，项目中其他的文件就都可以用到这个宏了，就没必要在项目的每个文件中都重新定义这个宏了；
+ 2、存放整个项目都要用到的文件的头文件。.pch文件编译一次就可以了，项目中需要用到这个文件里面的内容的类直接用就可以了，就没必要在类中重新引用这个文件的头文件了；
+ 3、在项目中调用控制台打印日志的函数"NSLog"是需要耗费很多系统资源的，在调试阶段可以不用考虑这方面的因素，可以在必要的时候多打印一些日志，这样也有助于程序的开发，但是在程序发布以后，程序运行在用户手机上的时候再打印这些日志就没有用了，同时也会耗费很多手机上的系统资源，会占用比较多的手机内存空间。如下的代码中就可以做到在程序调试阶段会调用打印日志的函数，在发布阶段就不调用打印日志的函数，这样就避免了上述问题的发生。
+ */
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif /* PrefixHeader_pch */
+
+#ifdef __OBJC__  //定义以下的代码只能在OC文件下才有效
+
+#define ABC 10  //定义宏
+#import "NSString+ZPExtension.h"  //引用文件的头文件
+
+/**
+ 在项目的Edit Scheme中可以选择项目是处于调试(Debug)阶段还是处于发布(Release)阶段；
+ 在如下的代码中，在调试阶段，自定义函数"ZPLog(...)"后面写了"NSLog(__VA_ARGS__)"函数，意思就是说可以用"ZPLog(...)"函数代替原来的"NSLog(__VA_ARGS__)"函数，这样的话在代码中直接写"ZPLog(...)"函数就能在控制台打印东西了，而不必写"NSLog(__VA_ARGS__)"函数了。而在发布阶段"ZPLog(...)"函数后面没有写用什么函数替代它，所以在发布阶段就等于没有调用任何实际的函数，也就不会在控制台上打印东西了，避免了耗费多余的手机的系统资源。
+ */
+#ifdef DEBUG  //调试阶段
+#define ZPLog(...) NSLog(__VA_ARGS__)
+#else  //发布阶段
+#define ZPLog(...)
+#endif
+
+#endif
